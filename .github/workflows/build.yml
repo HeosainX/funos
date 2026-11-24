@@ -1,0 +1,33 @@
+name: Build FunOS ISO
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Освобождаю место на диске раннера
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL
+          df -h /
+
+      - name: Собираю ISO в контейнере Arch
+        run: |
+          docker run --rm --privileged -v "$PWD:/src" archlinux:latest bash -c "
+            pacman-key --init &&
+            pacman-key --populate archlinux &&
+            pacman -Sy --noconfirm archiso &&
+            cd /src && bash build_funos.sh
+          "
+
+      - name: Сохраняю ISO
+        uses: actions/upload-artifact@v4
+        with:
+          name: funos-iso
+          path: out/*.iso
