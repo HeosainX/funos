@@ -28,9 +28,8 @@ cowsay
 figlet
 sl
 cmatrix
-bsdgames
 espeak-ng
-neofetch
+fastfetch
 mesa
 xorg-server
 xorg-xinit
@@ -63,7 +62,6 @@ echo ">>> 5. Пишу меню и игры"
 cat > "$BIN/funos-menu" << 'EOF'
 #!/bin/bash
 pause() { read -rp "Нажмите Enter..." _; }
-game() { if command -v "$1" >/dev/null 2>&1; then "$1"; else echo "Нет игры: $1"; sleep 1; fi; }
 
 while true; do
   clear
@@ -81,14 +79,12 @@ while true; do
   echo "  9) Матрица (15 сек)"
   echo " 10) Паровозик"
   echo " 11) Говорящая система"
-  echo " 12) Виселица (bsdgames)"
-  echo " 13) Приключение (bsdgames)"
   echo " 14) Рабочий стол XFCE (startx)"
   echo "  0) Выход в консоль"
   echo
   read -rp "Выбор: " c
   case $c in
-    1) neofetch; pause ;;
+    1) fastfetch; pause ;;
     2) snake ;;
     3) guess ;;
     4) rps ;;
@@ -99,8 +95,6 @@ while true; do
     9) timeout 15 cmatrix -b ;;
     10) sl; pause ;;
     11) espeak-ng -v ru "Привет! Я FunOS. Добро пожаловать!" 2>/dev/null; pause ;;
-    12) game hangman; pause ;;
-    13) game adventure; pause ;;
     14) startx ;;
     0) break ;;
     *) echo "Нет такого пункта"; sleep 1 ;;
